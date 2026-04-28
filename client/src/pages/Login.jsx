@@ -31,8 +31,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 transition-all duration-300">
+    <div 
+      className="min-h-screen flex items-center justify-center px-4 relative bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/family-tree-bg.jpg')" }}
+    >
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-0"></div>
+      <div className="max-w-md w-full space-y-8 p-8 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-800/50 transition-all duration-300 relative z-10">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 mb-4">
             <Lock size={32} />

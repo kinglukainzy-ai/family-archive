@@ -14,6 +14,7 @@ const EnrollMember = ({ onSuccess }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +22,20 @@ const EnrollMember = ({ onSuccess }) => {
     setError(null);
     try {
       await api.post('/persons', formData);
-      onSuccess();
+      setShowSuccess(true);
+      setTimeout(() => {
+        onSuccess();
+        setFormData({
+          firstName: '',
+          lastName: '',
+          gender: 'UNKNOWN',
+          isLiving: true,
+          dateOfBirth: '',
+          birthPlace: '',
+          isRoot: false
+        });
+        setShowSuccess(false);
+      }, 1500);
     } catch (err) {
       setError(err.response?.data?.message || 'Enrollment failed');
     } finally {
@@ -123,11 +137,15 @@ const EnrollMember = ({ onSuccess }) => {
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full flex justify-center items-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 shadow-lg shadow-indigo-100"
+          disabled={loading || showSuccess}
+          className={`w-full flex justify-center items-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 shadow-lg transition-all duration-300 ${
+            showSuccess 
+              ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500 shadow-green-100' 
+              : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 shadow-indigo-100'
+          }`}
         >
-          {loading ? 'Processing...' : 'Create Person & Continue'}
-          {!loading && <ArrowRight className="w-5 h-5" />}
+          {loading ? 'Processing...' : showSuccess ? 'Success! Redirecting...' : 'Create Person & Continue'}
+          {!loading && !showSuccess && <ArrowRight className="w-5 h-5" />}
         </button>
       </form>
     </div>

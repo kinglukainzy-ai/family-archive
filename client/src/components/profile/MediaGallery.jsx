@@ -115,7 +115,7 @@ const MediaGallery = ({ personId, type = 'PHOTO' }) => {
               )}
 
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex flex-col justify-end p-3">
-                <div className="flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex justify-between items-end md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                   <p className="text-white text-xs font-medium truncate flex-1 mr-2">{item.caption || 'No caption'}</p>
                   {canEdit && (
                     <button

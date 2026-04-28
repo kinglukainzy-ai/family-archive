@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../../api/axios';
-import { Check, X, Eye, Clock, User, Download } from 'lucide-react';
+import { Check, X, Eye, Clock, User, Download, FileText, Play } from 'lucide-react';
 import Modal from '../shared/Modal';
 
 const MediaApproval = () => {
@@ -70,9 +70,14 @@ const MediaApproval = () => {
                     className="w-full h-full object-cover"
                     alt={item.caption}
                   />
+                ) : item.fileUrl ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-indigo-50 text-indigo-600">
+                    <FileText className="w-12 h-12" />
+                    <span className="text-xs mt-2">{item.fileType?.toUpperCase() || 'DOCUMENT'}</span>
+                  </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-900 text-white">
-                    <span className="text-xs uppercase tracking-widest opacity-50">Video Preview Placeholder</span>
+                    <Play className="w-12 h-12 opacity-50" />
                   </div>
                 )}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -135,8 +140,17 @@ const MediaApproval = () => {
                   className="max-w-full max-h-full object-contain"
                   alt={previewItem.caption}
                 />
+              ) : previewItem.fileUrl ? (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-indigo-50 text-indigo-600">
+                  <FileText className="w-24 h-24 mb-4" />
+                  <span className="text-lg font-bold">{previewItem.fileType?.toUpperCase() || 'DOCUMENT'}</span>
+                  <p className="mt-2 text-sm text-gray-500">Preview not available. Please download to view.</p>
+                </div>
               ) : (
-                <p className="text-white">Video preview not available in this view</p>
+                <div className="w-full h-full flex items-center justify-center bg-gray-900 text-white">
+                  <Play className="w-16 h-16 opacity-50 mb-4" />
+                  <p>Video preview not available in this view</p>
+                </div>
               )}
             </div>
             <div className="flex justify-between items-start">

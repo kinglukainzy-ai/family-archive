@@ -2,8 +2,8 @@ import TreeNode from './TreeNode';
 
 const FamilyTree = ({ person }) => {
   return (
-    <div className="family-tree-container p-4">
-      <div className="flex flex-col items-center">
+    <div className="overflow-auto w-full pb-20">
+      <div className="flex justify-center min-w-max px-8 pb-20">
         <TreeNode person={person} />
       </div>
     </div>

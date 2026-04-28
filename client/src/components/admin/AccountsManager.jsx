@@ -21,6 +21,11 @@ const AccountsManager = () => {
     personId: '',
     role: 'MEMBER'
   });
+  const [resetPasswordState, setResetPasswordState] = useState({
+    isOpen: false,
+    accountId: null,
+    newPassword: ''
+  });
 
   const fetchAccounts = useCallback(async () => {
     try {
@@ -61,11 +66,12 @@ const AccountsManager = () => {
     }
   };
 
-  const handleResetPassword = async (id) => {
-    const newPassword = window.prompt('Enter new temporary password:');
-    if (!newPassword) return;
+  const submitPasswordReset = async (e) => {
+    e.preventDefault();
+    if (!resetPasswordState.newPassword) return;
     try {
-      await api.patch(`/admin/accounts/${id}/reset-password`, { newPassword });
+      await api.patch(`/admin/accounts/${resetPasswordState.accountId}/reset-password`, { newPassword: resetPasswordState.newPassword });
+      setResetPasswordState({ isOpen: false, accountId: null, newPassword: '' });
       alert('Password reset successfully');
     } catch (error) {
       console.error('Failed to reset password:', error);
@@ -171,7 +177,7 @@ const AccountsManager = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">
                       <button 
-                        onClick={() => handleResetPassword(account.id)}
+                        onClick={() => setResetPasswordState({ isOpen: true, accountId: account.id, newPassword: '' })}
                         className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                         title="Reset Password"
                       >
@@ -270,6 +276,42 @@ const AccountsManager = () => {
               className="px-6 py-2 text-sm font-bold text-white bg-indigo-600 border border-transparent rounded-lg hover:bg-indigo-700 shadow-lg shadow-indigo-100"
             >
               Create Account
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        isOpen={resetPasswordState.isOpen}
+        onClose={() => setResetPasswordState({ isOpen: false, accountId: null, newPassword: '' })}
+        title="Reset Password"
+      >
+        <form onSubmit={submitPasswordReset} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">New Temporary Password</label>
+            <input
+              type="text"
+              value={resetPasswordState.newPassword}
+              onChange={(e) => setResetPasswordState({ ...resetPasswordState, newPassword: e.target.value })}
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              placeholder="Min 8 characters"
+              required
+              minLength={8}
+            />
+          </div>
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
+              onClick={() => setResetPasswordState({ isOpen: false, accountId: null, newPassword: '' })}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 text-sm font-bold text-white bg-indigo-600 border border-transparent rounded-lg hover:bg-indigo-700 shadow-lg shadow-indigo-100"
+            >
+              Reset Password
             </button>
           </div>
         </form>

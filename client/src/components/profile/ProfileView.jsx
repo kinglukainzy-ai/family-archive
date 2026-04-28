@@ -5,6 +5,7 @@ import MediaGallery from './MediaGallery';
 import DocumentsSection from './DocumentsSection';
 import { Calendar, MapPin, Briefcase, Globe } from 'lucide-react';
 import { format } from 'date-fns';
+import DOMPurify from 'dompurify';
 
 const ProfileView = ({ person }) => {
   const [activeTab, setActiveTab] = useState('biography');
@@ -101,7 +102,7 @@ const ProfileView = ({ person }) => {
           {activeTab === 'biography' && (
             <div className="prose prose-indigo max-w-none">
               {person.biography ? (
-                <div dangerouslySetInnerHTML={{ __html: person.biography }} />
+                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(person.biography) }} />
               ) : (
                 <p className="text-gray-500 italic">No biography available.</p>
               )}

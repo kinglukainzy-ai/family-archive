@@ -121,7 +121,7 @@ const DocumentsSection = ({ personId }) => {
               {canEdit && (
                 <button
                   onClick={() => handleDelete(doc.id)}
-                  className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity"
+                  className="md:opacity-0 md:group-hover:opacity-100 p-1.5 text-gray-400 hover:text-red-600 transition-opacity"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

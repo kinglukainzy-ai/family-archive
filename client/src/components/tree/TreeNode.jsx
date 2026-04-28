@@ -20,14 +20,16 @@ const TreeNode = ({ person }) => {
   return (
     <div className="tree-node flex flex-col items-center relative">
       {/* Current Person & Spouse(s) */}
-      <div className="flex items-center gap-12 mb-8 relative">
+      <div className="flex items-center gap-4 mb-4 relative">
         <PersonCard person={person} />
 
         {person.unions?.map((union) => (
           <Fragment key={union.id}>
             {/* Connector between partners */}
-            <div className="absolute left-[140px] top-1/2 -translate-y-1/2 w-12 h-0.5 bg-gray-300 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+            <div className="flex flex-col items-center justify-center w-8">
+              <div className="w-full h-0.5 bg-gray-300 flex items-center justify-center relative">
+                <div className="absolute w-2 h-2 rounded-full bg-gray-300"></div>
+              </div>
             </div>
             
             {/* Partner Card */}
@@ -53,7 +55,7 @@ const TreeNode = ({ person }) => {
       {hasChildren && (
         <button 
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute bottom-4 z-10 bg-white border border-gray-200 rounded-full p-1 text-gray-400 hover:text-indigo-600 shadow-sm transition-all"
+          className="mb-8 z-10 bg-white border border-gray-200 rounded-full p-1 text-gray-400 hover:text-indigo-600 shadow-sm transition-all"
         >
           {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
         </button>
