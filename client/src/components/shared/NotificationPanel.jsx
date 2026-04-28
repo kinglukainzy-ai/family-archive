@@ -9,9 +9,10 @@ const NotificationPanel = ({ isOpen, onClose }) => {
 
   const getIcon = (type) => {
     switch (type) {
-      case 'ACCOUNT_APPROVED': return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'MEDIA_UPLOADED': return <Info className="w-5 h-5 text-blue-500" />;
-      case 'SYSTEM_ALERT': return <AlertTriangle className="w-5 h-5 text-red-500" />;
+      case 'MEDIA_APPROVED': return <CheckCircle className="w-5 h-5 text-green-500" />;
+      case 'MEDIA_PENDING': return <Clock className="w-5 h-5 text-yellow-500" />;
+      case 'PROFILE_UPDATED': return <Info className="w-5 h-5 text-blue-500" />;
+      case 'NEW_MEMBER_ENROLLED': return <CheckCircle className="w-5 h-5 text-indigo-500" />;
       default: return <Info className="w-5 h-5 text-gray-500" />;
     }
   };
@@ -71,11 +72,13 @@ const NotificationPanel = ({ isOpen, onClose }) => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm ${!notification.isRead ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
-                        {notification.title}
-                      </p>
-                      <p className="mt-1 text-sm text-gray-500 line-clamp-2">
                         {notification.message}
                       </p>
+                      {notification.relatedPersonId && (
+                        <p className="mt-1 text-xs text-gray-500 line-clamp-1">
+                          Related Profile ID: {notification.relatedPersonId}
+                        </p>
+                      )}
                       <p className="mt-2 text-xs text-gray-400">
                         {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                       </p>

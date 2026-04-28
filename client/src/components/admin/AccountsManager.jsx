@@ -76,7 +76,7 @@ const AccountsManager = () => {
   const handleToggleStatus = async (id, currentStatus) => {
     if (!currentStatus) return; // Backend does not support reactivation yet
     try {
-      await api.patch(`/admin/accounts/${id}/status`, { isActive: false });
+      await api.patch(`/admin/accounts/${id}/deactivate`);
       setAccounts(accounts.map(acc => acc.id === id ? { ...acc, isActive: false } : acc));
     } catch (error) {
       console.error('Failed to update account status:', error);
