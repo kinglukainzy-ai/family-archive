@@ -1,0 +1,236 @@
+// server/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ACCOUNTS ────────────────────────────────────────────────────────────────
+
+model Account {
+  id            String    @id @default(uuid())
+  username      String    @unique
+  passwordHash  String
+  role          Role      @default(MEMBER)
+  isActive      Boolean   @default(true)
+  forcePasswordChange Boolean @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  person        Person?   @relation(fields: [personId], references: [id])
+  personId      String?   @unique
+
+  notifications Notification[]
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+// ─── PERSONS ─────────────────────────────────────────────────────────────────
+
+model Person {
+  id              String    @id @default(uuid())
+  firstName       String
+  lastName        String
+  maidenName      String?
+  otherNames      String?   // aliases, nicknames
+  gender          Gender
+  dateOfBirth     DateTime?
+  dateOfDeath     DateTime?
+  birthPlace      String?
+  deathPlace      String?
+  isDeceased      Boolean   @default(false)
+  isLiving        Boolean   @default(true)  // false = profile-only, no account
+  profilePhotoUrl String?
+  biography       String?   @db.Text
+  occupation      String?
+  nationality     String?
+
+  // Profile locked after person turns 18 and before admin assigns account
+  profileLocked   Boolean   @default(false)
+
+  // Tree position
+  isRoot          Boolean   @default(false) // Admin sets exactly one person as root
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  account         Account?
+  
+  // Unions this person is part of (as partner1 or partner2)
+  unionsAsPartner1  Union[]  @relation("Partner1")
+  unionsAsPartner2  Union[]  @relation("Partner2")
+
+  // Children records
+  childRecords    Child[]
+
+  // Content
+  lifeEvents      LifeEvent[]
+  media           Media[]
+  documents       Document[]
+
+  // Notifications about this person
+  notifications   Notification[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+// ─── UNIONS ──────────────────────────────────────────────────────────────────
+// A union is a relationship between two people (or one person + unknown)
+// that may have produced children. Children belong to a union, not a person.
+
+model Union {
+  id          String      @id @default(uuid())
+  partner1Id  String
+  partner2Id  String?     // nullable = single parent / unknown other parent
+  unionType   UnionType
+  startDate   DateTime?
+  endDate     DateTime?   // null = ongoing
+  stillTogether Boolean   @default(true)
+  notes       String?
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  partner1    Person      @relation("Partner1", fields: [partner1Id], references: [id])
+  partner2    Person?     @relation("Partner2", fields: [partner2Id], references: [id])
+  children    Child[]
+}
+
+enum UnionType {
+  MARRIED
+  DIVORCED
+  PARTNERSHIP   // together but not formally married
+  RELATIONSHIP  // had children, no formal union
+  SINGLE_PARENT // only one known parent
+}
+
+// ─── CHILDREN ────────────────────────────────────────────────────────────────
+// Links a person to a union as a child
+
+model Child {
+  id              String          @id @default(uuid())
+  unionId         String
+  personId        String
+  relationshipType ChildRelationType @default(BIOLOGICAL)
+  birthOrder      Int?            // optional ordering within the union
+
+  union           Union           @relation(fields: [unionId], references: [id])
+  person          Person          @relation(fields: [personId], references: [id])
+
+  @@unique([unionId, personId])
+}
+
+enum ChildRelationType {
+  BIOLOGICAL
+  ADOPTED
+  STEP
+}
+
+// ─── LIFE EVENTS ─────────────────────────────────────────────────────────────
+
+model LifeEvent {
+  id          String      @id @default(uuid())
+  personId    String
+  eventType   EventType
+  title       String
+  description String?     @db.Text
+  eventDate   DateTime?
+  location    String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  person      Person      @relation(fields: [personId], references: [id])
+}
+
+enum EventType {
+  BIRTH
+  DEATH
+  MARRIAGE
+  DIVORCE
+  MIGRATION
+  EDUCATION
+  CAREER
+  MILITARY
+  AWARD
+  OTHER
+}
+
+// ─── MEDIA ───────────────────────────────────────────────────────────────────
+
+model Media {
+  id          String      @id @default(uuid())
+  personId    String
+  type        MediaType
+  url         String      // local path or external URL
+  thumbnailUrl String?    // generated thumbnail for photos/videos
+  caption     String?
+  takenAt     DateTime?
+  isApproved  Boolean     @default(false) // admin must approve
+  uploadedById String?    // account id of uploader
+  createdAt   DateTime    @default(now())
+
+  person      Person      @relation(fields: [personId], references: [id])
+}
+
+enum MediaType {
+  PHOTO
+  VIDEO_UPLOAD   // short clip stored on server (max 100MB)
+  VIDEO_LINK     // external YouTube/Vimeo link
+}
+
+// ─── DOCUMENTS ───────────────────────────────────────────────────────────────
+
+model Document {
+  id          String      @id @default(uuid())
+  personId    String
+  title       String
+  description String?
+  fileUrl     String      // local path
+  fileType    String      // pdf, jpg, png, etc.
+  fileSizeKb  Int
+  isApproved  Boolean     @default(false)
+  uploadedById String?
+  createdAt   DateTime    @default(now())
+
+  person      Person      @relation(fields: [personId], references: [id])
+}
+
+// ─── NOTIFICATIONS ───────────────────────────────────────────────────────────
+
+model Notification {
+  id          String              @id @default(uuid())
+  accountId   String              // recipient
+  type        NotificationType
+  message     String
+  isRead      Boolean             @default(false)
+  relatedPersonId String?         // person this notification is about
+  createdAt   DateTime            @default(now())
+
+  account     Account             @relation(fields: [accountId], references: [id])
+  relatedPerson Person?           @relation(fields: [relatedPersonId], references: [id])
+}
+
+enum NotificationType {
+  PROFILE_UPDATED        // a member updated their profile
+  MEDIA_PENDING          // new media upload awaiting admin approval
+  MEDIA_APPROVED         // admin approved your upload
+  MEDIA_REJECTED         // admin rejected your upload
+  NEW_MEMBER_ENROLLED    // admin enrolled a new family member
+  NEW_ACCOUNT_CREATED    // your account was created (welcome)
+  PROFILE_LOCKED         // profile locked (turned 18)
+  ACCOUNT_RESET          // admin reset your password
+  BIRTHDAY_TODAY         // family member birthday
+}
