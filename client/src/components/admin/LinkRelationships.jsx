@@ -14,7 +14,7 @@ const LinkRelationships = () => {
         api.get('/persons'),
         api.get('/unions')
       ]);
-      setPersons(personsRes.data);
+      setPersons(personsRes.data.persons);
       setUnions(unionsRes.data);
     } catch (error) {
       console.error('Failed to fetch data:', error);

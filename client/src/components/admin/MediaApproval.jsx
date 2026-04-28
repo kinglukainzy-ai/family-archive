@@ -11,7 +11,7 @@ const MediaApproval = () => {
   const fetchPending = useCallback(async () => {
     try {
       const { data } = await api.get('/media/pending');
-      setItems(data);
+      setItems([...data.media, ...data.documents]);
     } catch (error) {
       console.error('Failed to fetch pending media:', error);
     } finally {
