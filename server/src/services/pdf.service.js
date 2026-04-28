@@ -47,7 +47,7 @@ const generateFamilyPDF = async () => {
           <div class="events-title">Life Events</div>
           ${person.lifeEvents.map(event => `
             <div class="event">
-              <strong>${new Date(event.eventDate).toLocaleDateString()}:</strong> ${event.title} (${event.location || 'Unknown location'})
+              <strong>${event.eventDate ? new Date(event.eventDate).toLocaleDateString() : 'Date unknown'}:</strong> ${event.title} (${event.location || 'Unknown location'})
             </div>
           `).join('')}
         </div>

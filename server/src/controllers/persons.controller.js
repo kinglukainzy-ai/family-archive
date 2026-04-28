@@ -1,5 +1,6 @@
 const prisma = require('../utils/prismaClient');
 const asyncHandler = require('../utils/asyncHandler');
+const { notifyAdmin } = require('../services/notification.service');
 
 // @desc    Get all persons
 // @route   GET /api/persons
@@ -28,9 +29,27 @@ const getPersons = asyncHandler(async (req, res) => {
 // @route   POST /api/persons
 // @access  Admin
 const createPerson = asyncHandler(async (req, res) => {
+  const {
+    firstName, lastName, maidenName, otherNames, gender,
+    dateOfBirth, dateOfDeath, birthPlace, deathPlace,
+    isDeceased, isLiving, biography, occupation, nationality
+  } = req.body;
+
   const person = await prisma.person.create({
-    data: req.body
+    data: {
+      firstName, lastName, maidenName, otherNames, gender,
+      dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+      dateOfDeath: dateOfDeath ? new Date(dateOfDeath) : null,
+      birthPlace, deathPlace, isDeceased, isLiving,
+      biography, occupation, nationality
+    }
   });
+
+  await notifyAdmin(
+    'NEW_MEMBER_ENROLLED',
+    `${person.firstName} ${person.lastName} has been added to the archive.`,
+    person.id
+  );
 
   res.status(201).json(person);
 });
@@ -62,10 +81,38 @@ const getPersonById = asyncHandler(async (req, res) => {
 // @route   PATCH /api/persons/:id
 // @access  Member (own/children) + Admin
 const updatePerson = asyncHandler(async (req, res) => {
+  const {
+    firstName, lastName, maidenName, otherNames, gender,
+    dateOfBirth, dateOfDeath, birthPlace, deathPlace,
+    isDeceased, isLiving, biography, occupation, nationality
+  } = req.body;
+
+  const data = {};
+  if (firstName !== undefined) data.firstName = firstName;
+  if (lastName !== undefined) data.lastName = lastName;
+  if (maidenName !== undefined) data.maidenName = maidenName;
+  if (otherNames !== undefined) data.otherNames = otherNames;
+  if (gender !== undefined) data.gender = gender;
+  if (dateOfBirth !== undefined) data.dateOfBirth = dateOfBirth ? new Date(dateOfBirth) : null;
+  if (dateOfDeath !== undefined) data.dateOfDeath = dateOfDeath ? new Date(dateOfDeath) : null;
+  if (birthPlace !== undefined) data.birthPlace = birthPlace;
+  if (deathPlace !== undefined) data.deathPlace = deathPlace;
+  if (isDeceased !== undefined) data.isDeceased = isDeceased;
+  if (isLiving !== undefined) data.isLiving = isLiving;
+  if (biography !== undefined) data.biography = biography;
+  if (occupation !== undefined) data.occupation = occupation;
+  if (nationality !== undefined) data.nationality = nationality;
+
   const person = await prisma.person.update({
     where: { id: req.params.id },
-    data: req.body
+    data
   });
+
+  await notifyAdmin(
+    'PROFILE_UPDATED',
+    `${person.firstName} ${person.lastName}'s profile was updated.`,
+    person.id
+  );
 
   res.json(person);
 });

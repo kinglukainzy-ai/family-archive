@@ -24,8 +24,10 @@ const processImage = async (filePath) => {
     .jpeg({ quality: 85 })
     .toFile(originalProcessedPath);
 
-  // Optional: delete original upload if you want to save space
-  // fs.unlinkSync(filePath);
+  // Delete the raw multer upload now that processed copies exist
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
 
   return {
     url: originalProcessedPath,

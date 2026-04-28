@@ -3,6 +3,15 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 require('dotenv').config();
+const rateLimit = require('express-rate-limit');
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: { message: 'Too many login attempts. Please try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 const app = express();
 
@@ -24,6 +33,7 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
+app.post('/api/auth/login', loginLimiter);
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/persons', require('./routes/persons.routes'));
 app.use('/api/tree', require('./routes/tree.routes'));
