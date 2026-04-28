@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNotifications } from '../../context/NotificationContext';
+import NotificationPanel from './NotificationPanel';
 import { 
   Bell, 
   Menu, 
@@ -17,6 +19,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+  const { unreadCount } = useNotifications();
 
   const handleLogout = async () => {
     try {
@@ -64,9 +68,16 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="p-2 text-gray-400 hover:text-gray-500 relative">
+            <button 
+              onClick={() => setIsNotificationPanelOpen(true)}
+              className="p-2 text-gray-400 hover:text-gray-500 relative focus:outline-none"
+            >
               <Bell className="w-6 h-6" />
-              <span className="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white"></span>
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
             </button>
 
             <div className="relative">
@@ -132,6 +143,11 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <NotificationPanel 
+        isOpen={isNotificationPanelOpen} 
+        onClose={() => setIsNotificationPanelOpen(false)} 
+      />
 
       {/* Mobile menu */}
       {isMenuOpen && (

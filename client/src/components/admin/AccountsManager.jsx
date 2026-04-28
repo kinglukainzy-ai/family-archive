@@ -35,7 +35,7 @@ const AccountsManager = () => {
 
   const fetchUnlinked = useCallback(async () => {
     try {
-      const { data } = await api.get('/admin/unlinked-persons');
+      const { data } = await api.get('/admin/unplaced');
       setUnlinkedPersons(data);
     } catch (error) {
       console.error('Failed to fetch unlinked persons:', error);
@@ -74,9 +74,10 @@ const AccountsManager = () => {
   };
 
   const handleToggleStatus = async (id, currentStatus) => {
+    if (!currentStatus) return; // Backend does not support reactivation yet
     try {
-      await api.patch(`/admin/accounts/${id}/status`, { isActive: !currentStatus });
-      setAccounts(accounts.map(acc => acc.id === id ? { ...acc, isActive: !currentStatus } : acc));
+      await api.patch(`/admin/accounts/${id}/status`, { isActive: false });
+      setAccounts(accounts.map(acc => acc.id === id ? { ...acc, isActive: false } : acc));
     } catch (error) {
       console.error('Failed to update account status:', error);
       alert('Failed to update account status');
@@ -178,10 +179,11 @@ const AccountsManager = () => {
                       </button>
                       <button 
                         onClick={() => handleToggleStatus(account.id, account.isActive)}
+                        disabled={!account.isActive}
                         className={`p-2 rounded-lg transition-colors ${
-                          account.isActive ? 'text-gray-400 hover:text-red-600 hover:bg-red-50' : 'text-gray-400 hover:text-green-600 hover:bg-green-50'
+                          account.isActive ? 'text-gray-400 hover:text-red-600 hover:bg-red-50' : 'text-gray-300 cursor-not-allowed'
                         }`}
-                        title={account.isActive ? 'Deactivate' : 'Activate'}
+                        title={account.isActive ? 'Deactivate' : 'Already Deactivated'}
                       >
                         {account.isActive ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
                       </button>
