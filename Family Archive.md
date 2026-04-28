@@ -1,4 +1,5 @@
 # Family Archive — Complete Project Specification
+
 > Version 1.0 | For IDE Agent Execution
 
 ---
@@ -13,24 +14,24 @@ The application is to be hosted on an Oracle Always Free ARM server (4 cores, 24
 
 ## 2. TECH STACK
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | React 18 (Vite) |
-| Styling | Tailwind CSS |
-| Backend | Node.js + Express |
-| Database | PostgreSQL |
-| Auth | JWT stored in httpOnly cookies |
-| File Storage | Local filesystem (Oracle block storage) |
-| PDF Generation | Puppeteer |
-| Image Processing | Sharp (resize/compress on upload) |
-| ORM | Prisma |
-| Runtime | Node 20 LTS |
+| Layer            | Technology                              |
+| ---------------- | --------------------------------------- |
+| Frontend         | React 18 (Vite)                         |
+| Styling          | Tailwind CSS                            |
+| Backend          | Node.js + Express                       |
+| Database         | PostgreSQL                              |
+| Auth             | JWT stored in httpOnly cookies          |
+| File Storage     | Local filesystem (Oracle block storage) |
+| PDF Generation   | Puppeteer                               |
+| Image Processing | Sharp (resize/compress on upload)       |
+| ORM              | Prisma                                  |
+| Runtime          | Node 20 LTS                             |
 
 ---
 
 ## 3. PROJECT STRUCTURE
 
-```
+```text
 family-archive/
 ├── client/                        # React frontend (Vite)
 │   ├── public/
@@ -209,7 +210,7 @@ model Person {
 
   // Relations
   account         Account?
-  
+
   // Unions this person is part of (as partner1 or partner2)
   unionsAsPartner1  Union[]  @relation("Partner1")
   unionsAsPartner2  Union[]  @relation("Partner2")
@@ -386,116 +387,118 @@ enum NotificationType {
 
 ## 5. API ROUTES
 
-### Auth  `/api/auth`
+### Auth `/api/auth`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| POST | `/login` | Public | Login with username + password. Returns JWT in httpOnly cookie |
-| POST | `/logout` | Member | Clears cookie |
-| POST | `/change-password` | Member | Change own password |
-| GET | `/me` | Member | Returns current user + linked person |
+| Method | Path               | Access | Description                                                    |
+| ------ | ------------------ | ------ | -------------------------------------------------------------- |
+| POST   | `/login`           | Public | Login with username + password. Returns JWT in httpOnly cookie |
+| POST   | `/logout`          | Member | Clears cookie                                                  |
+| POST   | `/change-password` | Member | Change own password                                            |
+| GET    | `/me`              | Member | Returns current user + linked person                           |
 
-### Persons  `/api/persons`
+### Persons `/api/persons`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/` | Admin | List all persons (paginated) |
-| POST | `/` | Admin | Create new person |
-| GET | `/:id` | Member | Get person profile |
-| PATCH | `/:id` | Member (own/children) + Admin | Update person fields |
-| DELETE | `/:id` | Admin | Soft delete person |
-| GET | `/:id/family` | Member | Get immediate family (parents, siblings, children, spouses) |
+| Method | Path          | Access                        | Description                                                 |
+| ------ | ------------- | ----------------------------- | ----------------------------------------------------------- |
+| GET    | `/`           | Admin                         | List all persons (paginated)                                |
+| POST   | `/`           | Admin                         | Create new person                                           |
+| GET    | `/:id`        | Member                        | Get person profile                                          |
+| PATCH  | `/:id`        | Member (own/children) + Admin | Update person fields                                        |
+| DELETE | `/:id`        | Admin                         | Soft delete person                                          |
+| GET    | `/:id/family` | Member                        | Get immediate family (parents, siblings, children, spouses) |
 
-### Tree  `/api/tree`
+### Tree `/api/tree`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/` | Member | Get full tree data (flat list with relationships, built into tree on client) |
-| GET | `/root` | Member | Get the current root person |
-| PATCH | `/root` | Admin | Set a different root person |
+| Method | Path    | Access | Description                                                                  |
+| ------ | ------- | ------ | ---------------------------------------------------------------------------- |
+| GET    | `/`     | Member | Get full tree data (flat list with relationships, built into tree on client) |
+| GET    | `/root` | Member | Get the current root person                                                  |
+| PATCH  | `/root` | Admin  | Set a different root person                                                  |
 
-### Unions  `/api/unions`
+### Unions `/api/unions`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/` | Admin | List all unions |
-| POST | `/` | Admin | Create a union between two persons |
-| PATCH | `/:id` | Admin | Update union details |
-| DELETE | `/:id` | Admin | Remove a union |
-| POST | `/:id/children` | Admin | Add a child to a union |
-| DELETE | `/:id/children/:personId` | Admin | Remove a child from a union |
+| Method | Path                      | Access | Description                        |
+| ------ | ------------------------- | ------ | ---------------------------------- |
+| GET    | `/`                       | Admin  | List all unions                    |
+| POST   | `/`                       | Admin  | Create a union between two persons |
+| PATCH  | `/:id`                    | Admin  | Update union details               |
+| DELETE | `/:id`                    | Admin  | Remove a union                     |
+| POST   | `/:id/children`           | Admin  | Add a child to a union             |
+| DELETE | `/:id/children/:personId` | Admin  | Remove a child from a union        |
 
-### Media  `/api/media`
+### Media `/api/media`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| POST | `/persons/:personId/upload` | Member (own/children) + Admin | Upload photo, document, or short video |
-| POST | `/persons/:personId/link-video` | Member (own/children) + Admin | Add external video link |
-| GET | `/pending` | Admin | List all unapproved media |
-| PATCH | `/:id/approve` | Admin | Approve media item |
-| PATCH | `/:id/reject` | Admin | Reject and delete media item |
-| DELETE | `/:id` | Admin | Delete media item |
-| GET | `/persons/:personId` | Member | Get all approved media for a person |
+| Method | Path                            | Access                        | Description                            |
+| ------ | ------------------------------- | ----------------------------- | -------------------------------------- |
+| POST   | `/persons/:personId/upload`     | Member (own/children) + Admin | Upload photo, document, or short video |
+| POST   | `/persons/:personId/link-video` | Member (own/children) + Admin | Add external video link                |
+| GET    | `/pending`                      | Admin                         | List all unapproved media              |
+| PATCH  | `/:id/approve`                  | Admin                         | Approve media item                     |
+| PATCH  | `/:id/reject`                   | Admin                         | Reject and delete media item           |
+| DELETE | `/:id`                          | Admin                         | Delete media item                      |
+| GET    | `/persons/:personId`            | Member                        | Get all approved media for a person    |
 
-### Documents  `/api/documents`
+### Documents `/api/documents`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| POST | `/persons/:personId` | Member (own/children) + Admin | Upload document |
-| GET | `/persons/:personId` | Member | List approved documents for a person |
-| PATCH | `/:id/approve` | Admin | Approve document |
-| DELETE | `/:id` | Admin | Delete document |
+| Method | Path                 | Access                        | Description                          |
+| ------ | -------------------- | ----------------------------- | ------------------------------------ |
+| POST   | `/persons/:personId` | Member (own/children) + Admin | Upload document                      |
+| GET    | `/persons/:personId` | Member                        | List approved documents for a person |
+| PATCH  | `/:id/approve`       | Admin                         | Approve document                     |
+| DELETE | `/:id`               | Admin                         | Delete document                      |
 
-### Life Events  `/api/events`
+### Life Events `/api/events`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/persons/:personId` | Member | Get all life events for a person |
-| POST | `/persons/:personId` | Member (own/children) + Admin | Add a life event |
-| PATCH | `/:id` | Member (own/children) + Admin | Update a life event |
-| DELETE | `/:id` | Admin | Delete a life event |
+| Method | Path                 | Access                        | Description                      |
+| ------ | -------------------- | ----------------------------- | -------------------------------- |
+| GET    | `/persons/:personId` | Member                        | Get all life events for a person |
+| POST   | `/persons/:personId` | Member (own/children) + Admin | Add a life event                 |
+| PATCH  | `/:id`               | Member (own/children) + Admin | Update a life event              |
+| DELETE | `/:id`               | Admin                         | Delete a life event              |
 
-### Notifications  `/api/notifications`
+### Notifications `/api/notifications`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/` | Member | Get own notifications (unread first) |
-| PATCH | `/:id/read` | Member | Mark notification as read |
-| PATCH | `/read-all` | Member | Mark all as read |
+| Method | Path        | Access | Description                          |
+| ------ | ----------- | ------ | ------------------------------------ |
+| GET    | `/`         | Member | Get own notifications (unread first) |
+| PATCH  | `/:id/read` | Member | Mark notification as read            |
+| PATCH  | `/read-all` | Member | Mark all as read                     |
 
-### Search  `/api/search`
+### Search `/api/search`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/?q=&generation=&birthDecade=&birthPlace=` | Member | Search persons |
+| Method | Path                                        | Access | Description    |
+| ------ | ------------------------------------------- | ------ | -------------- |
+| GET    | `/?q=&generation=&birthDecade=&birthPlace=` | Member | Search persons |
 
-### Admin  `/api/admin`
+### Admin `/api/admin`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/accounts` | Admin | List all accounts |
-| POST | `/accounts` | Admin | Create account and link to person |
-| PATCH | `/accounts/:id/reset-password` | Admin | Reset member password |
-| PATCH | `/accounts/:id/deactivate` | Admin | Deactivate account |
-| GET | `/unplaced` | Admin | Persons not yet linked in the tree |
-| GET | `/dashboard-stats` | Admin | Counts, pending media, locked profiles |
+| Method | Path                           | Access | Description                            |
+| ------ | ------------------------------ | ------ | -------------------------------------- |
+| GET    | `/accounts`                    | Admin  | List all accounts                      |
+| POST   | `/accounts`                    | Admin  | Create account and link to person      |
+| PATCH  | `/accounts/:id/reset-password` | Admin  | Reset member password                  |
+| PATCH  | `/accounts/:id/deactivate`     | Admin  | Deactivate account                     |
+| GET    | `/unplaced`                    | Admin  | Persons not yet linked in the tree     |
+| GET    | `/dashboard-stats`             | Admin  | Counts, pending media, locked profiles |
 
-### Export  `/api/export`
+### Export `/api/export`
 
-| Method | Path | Access | Description |
-|--------|------|--------|-------------|
-| GET | `/pdf` | Admin | Generate and download full family PDF report |
+| Method | Path   | Access | Description                                  |
+| ------ | ------ | ------ | -------------------------------------------- |
+| GET    | `/pdf` | Admin  | Generate and download full family PDF report |
 
 ---
 
 ## 6. BUSINESS LOGIC & RULES
 
 ### Authentication & Sessions
+
 - JWT stored in httpOnly, sameSite=strict cookie. Token expiry: 7 days.
 - On first login, if `forcePasswordChange = true`, redirect to change-password page before any other access.
 - Admin resets passwords manually. No self-service reset. No email required.
 
 ### Profile Ownership & Edit Rights
+
 - A member can edit only their own linked person's profile.
 - A member can also edit profiles of persons who are their **biological, adopted, or step children AND are under 18**.
 - On a child's 18th birthday, set `person.profileLocked = true`. Trigger a `PROFILE_LOCKED` notification to the parent and a `NEW_ACCOUNT_CREATED` notification to admin (prompting them to create the account).
@@ -503,6 +506,7 @@ enum NotificationType {
 - Once a locked person is assigned an account, set `profileLocked = false` — they now manage themselves.
 
 ### Tree Logic
+
 - The tree renders **top-down** starting from the root person (the one with `isRoot = true`).
 - Exactly one person can have `isRoot = true` at a time. Admin sets this.
 - Persons with no parents linked AND `isRoot = false` appear in an "Unplaced Members" section in the admin panel, not in the main tree.
@@ -512,12 +516,14 @@ enum NotificationType {
 - Half-siblings are persons who share one parent union but not both.
 
 ### Union & Relationship Rules
+
 - Children always belong to a **union**, never directly to a person.
 - A union can have `partner2Id = null` for single-parent cases or unknown other parent.
 - A person can appear in multiple unions (multiple marriages, relationships, etc.).
 - Admin manages all union creation and child linking. Members cannot create or modify unions.
 
 ### Media & Documents
+
 - All member uploads (photos, videos, documents) default to `isApproved = false`.
 - Admin uploads are auto-approved (`isApproved = true`).
 - On member upload: trigger `MEDIA_PENDING` notification to admin.
@@ -530,6 +536,7 @@ enum NotificationType {
 - Storage path structure: `storage/photos/{personId}/{uuid}.jpg`, `storage/documents/{personId}/{uuid}.pdf`, `storage/videos/{personId}/{uuid}.mp4`.
 
 ### Notifications
+
 - Notifications are in-app only. No email.
 - Notification triggers:
   - Member updates their own profile → notify admin (`PROFILE_UPDATED`)
@@ -544,11 +551,13 @@ enum NotificationType {
 - Unread notification count shown on bell icon in navbar.
 
 ### Search
+
 - Search across: firstName, lastName, maidenName, otherNames, biography, birthPlace.
 - Optional filters: generation (derived from tree depth), birthDecade, birthPlace exact match.
 - Results show name, photo thumbnail, DOB year, birthplace.
 
 ### Password Rules
+
 - Minimum 8 characters.
 - Admin-set initial passwords should be temporary (forcePasswordChange flag).
 - Passwords hashed with bcrypt (12 rounds).
@@ -558,11 +567,13 @@ enum NotificationType {
 ## 7. FRONTEND PAGES & COMPONENTS
 
 ### Login Page
+
 - Username + password form.
 - On success: redirect to `/tree`. If `forcePasswordChange`, redirect to `/change-password` first.
 - Show error on invalid credentials.
 
 ### Tree Page (`/tree`)
+
 - Full-width top-down family tree.
 - Starts from root person, renders downward recursively.
 - Each node shows: profile photo (or avatar placeholder), full name, birth year – death year (or "living"), location.
@@ -575,6 +586,7 @@ enum NotificationType {
 - Deceased persons: slightly muted styling, small cross icon or italic name.
 
 ### Profile Side Panel / Profile Page (`/profile/:id`)
+
 - Header: large photo, name, vital dates, birthplace.
 - Tabs: Biography | Life Events | Photos | Videos | Documents
 - Edit button visible only if user has edit rights for this person.
@@ -586,6 +598,7 @@ enum NotificationType {
 - All uploads show "Pending approval" badge to the uploader until approved.
 
 ### Admin Panel (`/admin`)
+
 - Tab navigation: Dashboard | Members | Enrollments | Tree Management | Media Approval | Accounts
 - **Dashboard:** Stats cards — total persons, total accounts, pending media count, locked profiles awaiting account.
 - **Members:** Searchable list of all persons. Click to view/edit any profile.
@@ -595,11 +608,13 @@ enum NotificationType {
 - **Accounts:** List all accounts. Create account (link to existing person, set username, set temp password). Reset password. Deactivate account.
 
 ### Search Page (`/search`)
+
 - Search bar with filters (birthplace, generation, decade).
 - Results as cards with photo, name, dates, birthplace.
 - Click result → opens profile.
 
 ### Notifications Panel
+
 - Accessible from bell icon in navbar.
 - Slide-in panel listing all notifications, newest first.
 - Unread shown with highlight. Mark all read button.
@@ -650,6 +665,7 @@ The `/api/tree` endpoint returns a nested object:
 ```
 
 The recursive tree builder in `server/src/services/tree.service.js` must:
+
 1. Start from the root person.
 2. For each person, fetch all their unions.
 3. For each union, fetch the partner and all children.
@@ -662,7 +678,7 @@ The recursive tree builder in `server/src/services/tree.service.js` must:
 
 All files stored under `server/storage/`. Served statically via Express at `/storage/*`.
 
-```
+```text
 storage/
 ├── photos/
 │   └── {personId}/
@@ -706,7 +722,7 @@ Run daily at midnight using `node-cron`:
 ```js
 // In server/src/services/notification.service.js
 // Every day at 00:00
-cron.schedule('0 0 * * *', async () => {
+cron.schedule("0 0 * * *", async () => {
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();
@@ -715,26 +731,28 @@ cron.schedule('0 0 * * *', async () => {
   const persons = await prisma.person.findMany({
     where: {
       isDeceased: false,
-      dateOfBirth: { not: null }
-    }
+      dateOfBirth: { not: null },
+    },
   });
 
-  const birthdayPersons = persons.filter(p => {
+  const birthdayPersons = persons.filter((p) => {
     const dob = new Date(p.dateOfBirth);
     return dob.getMonth() + 1 === month && dob.getDate() === day;
   });
 
   // For each birthday person, notify all active accounts
   for (const person of birthdayPersons) {
-    const allAccounts = await prisma.account.findMany({ where: { isActive: true } });
+    const allAccounts = await prisma.account.findMany({
+      where: { isActive: true },
+    });
     for (const account of allAccounts) {
       await prisma.notification.create({
         data: {
           accountId: account.id,
-          type: 'BIRTHDAY_TODAY',
+          type: "BIRTHDAY_TODAY",
           message: `🎂 Today is ${person.firstName} ${person.lastName}'s birthday!`,
-          relatedPersonId: person.id
-        }
+          relatedPersonId: person.id,
+        },
       });
     }
   }
@@ -748,6 +766,7 @@ cron.schedule('0 0 * * *', async () => {
 Admin can trigger a full family report PDF via `GET /api/export/pdf`.
 
 The PDF should include:
+
 - Cover page: Family name, date generated, total members count.
 - Family tree section: A simplified text-based tree representation.
 - Member profiles section: One page per person — photo, vital info, biography, life events list.
@@ -796,6 +815,7 @@ The PDF should include:
 ### Seed file (`server/prisma/seed.js`)
 
 Create one admin account on first seed:
+
 - Username: `admin`
 - Password: `ChangeMe123!` (forcePasswordChange: true)
 - Role: ADMIN
@@ -857,4 +877,4 @@ Create one admin account on first seed:
 
 ---
 
-*End of specification. All decisions finalised. No ambiguity remaining.*
+_End of specification. All decisions finalised. No ambiguity remaining._
