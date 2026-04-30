@@ -35,13 +35,21 @@ const createPerson = asyncHandler(async (req, res) => {
     isDeceased, isLiving, biography, occupation, nationality
   } = req.body;
 
+  if (req.body.isRoot) {
+    await prisma.person.updateMany({
+      where: { isRoot: true },
+      data: { isRoot: false }
+    });
+  }
+
   const person = await prisma.person.create({
     data: {
       firstName, lastName, maidenName, otherNames, gender,
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
       dateOfDeath: dateOfDeath ? new Date(dateOfDeath) : null,
       birthPlace, deathPlace, isDeceased, isLiving,
-      biography, occupation, nationality
+      biography, occupation, nationality,
+      isRoot: !!req.body.isRoot
     }
   });
 
@@ -103,6 +111,16 @@ const updatePerson = asyncHandler(async (req, res) => {
   if (occupation !== undefined) data.occupation = occupation;
   if (nationality !== undefined) data.nationality = nationality;
 
+  if (req.body.isRoot) {
+    await prisma.person.updateMany({
+      where: { isRoot: true },
+      data: { isRoot: false }
+    });
+    data.isRoot = true;
+  } else if (req.body.isRoot === false) {
+    data.isRoot = false;
+  }
+
   const person = await prisma.person.update({
     where: { id: req.params.id },
     data
@@ -117,15 +135,54 @@ const updatePerson = asyncHandler(async (req, res) => {
   res.json(person);
 });
 
+// @desc    Upload profile photo
+// @route   PATCH /api/persons/:id/photo
+// @access  Admin
+const uploadProfilePhoto = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'Please upload a file' });
+  }
+
+  const personId = req.params.id;
+  const person = await prisma.person.update({
+    where: { id: personId },
+    data: { profilePhotoUrl: `/storage/photos/${personId}/${req.file.filename}` }
+  });
+
+  res.json(person);
+});
+
 // @desc    Delete person
 // @route   DELETE /api/persons/:id
 // @access  Admin
 const deletePerson = asyncHandler(async (req, res) => {
-  await prisma.person.delete({
-    where: { id: req.params.id }
-  });
+  const personId = req.params.id;
 
-  res.json({ message: 'Person removed' });
+  // Manual cascade deletion
+  await prisma.$transaction([
+    // Delete unions where this person is a partner
+    prisma.union.deleteMany({
+      where: {
+        OR: [{ partner1Id: personId }, { partner2Id: personId }]
+      }
+    }),
+    // Delete child records
+    prisma.child.deleteMany({ where: { personId } }),
+    // Delete media
+    prisma.media.deleteMany({ where: { personId } }),
+    // Delete documents
+    prisma.document.deleteMany({ where: { personId } }),
+    // Delete life events
+    prisma.lifeEvent.deleteMany({ where: { personId } }),
+    // Delete notifications
+    prisma.notification.deleteMany({ where: { relatedPersonId: personId } }),
+    // Delete account if exists
+    prisma.account.deleteMany({ where: { personId } }),
+    // Finally delete the person
+    prisma.person.delete({ where: { id: personId } })
+  ]);
+
+  res.json({ message: 'Person and all associated records removed successfully.' });
 });
 
 module.exports = {
@@ -133,5 +190,6 @@ module.exports = {
   createPerson,
   getPersonById,
   updatePerson,
-  deletePerson
+  deletePerson,
+  uploadProfilePhoto
 };

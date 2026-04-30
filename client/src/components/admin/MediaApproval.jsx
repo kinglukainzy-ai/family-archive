@@ -55,9 +55,9 @@ const MediaApproval = () => {
       </div>
 
       {items.length === 0 ? (
-        <div className="bg-gray-50 rounded-xl p-12 text-center border-2 border-dashed border-gray-200">
-          <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 font-medium">All caught up! No pending media items.</p>
+        <div className="bg-white rounded-[2.5rem] p-20 text-center border-2 border-dashed border-slate-100 shadow-xl shadow-slate-200/50">
+          <Clock className="w-16 h-16 text-slate-100 mx-auto mb-6" />
+          <p className="text-slate-400 font-black italic text-lg tracking-tight">All caught up! No pending media items.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,16 +105,16 @@ const MediaApproval = () => {
                 </div>
               </div>
 
-              <div className="p-4 bg-gray-50 border-t border-gray-100 flex gap-3">
+              <div className="p-4 bg-slate-50/50 border-t border-slate-100 flex gap-3">
                 <button
                   onClick={() => handleApprove(item.id)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-green-700 shadow-lg shadow-green-100 transition-all transform active:scale-[0.98]"
                 >
                   <Check className="w-4 h-4" /> Approve
                 </button>
                 <button
                   onClick={() => handleReject(item.id)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-red-200 text-red-600 text-sm font-bold rounded-lg hover:bg-red-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white border-2 border-red-100 text-red-600 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-red-50 transition-all transform active:scale-[0.98]"
                 >
                   <X className="w-4 h-4" /> Reject
                 </button>

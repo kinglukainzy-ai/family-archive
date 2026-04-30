@@ -99,17 +99,17 @@ const AccountsManager = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Accounts Manager</h2>
-          <p className="text-gray-500">Manage family member access and credentials.</p>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Accounts Manager</h2>
+          <p className="text-slate-500 font-medium mt-1">Manage family member access and credentials.</p>
         </div>
         <button
           onClick={() => {
             fetchUnlinked();
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 shadow-xl shadow-primary-200 transition-all transform active:scale-[0.98]"
         >
-          <UserPlus className="w-4 h-4" /> Create Account
+          <UserPlus className="w-5 h-5" /> Create Account
         </button>
       </div>
 
@@ -122,19 +122,19 @@ const AccountsManager = () => {
           placeholder="Search by username or name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all"
+          className="block w-full pl-10 pr-3 py-4 border-2 border-slate-100 rounded-2xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 sm:text-sm transition-all font-medium"
         />
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-100">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-slate-50">
+            <thead className="bg-slate-50/50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">User</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-8 py-5 text-left text-xs font-black text-slate-400 uppercase tracking-[0.2em]">User</th>
+                <th className="px-8 py-5 text-left text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Role</th>
+                <th className="px-8 py-5 text-left text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
+                <th className="px-8 py-5 text-right text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
@@ -147,7 +147,7 @@ const AccountsManager = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
-                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                        <div className="h-10 w-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-700 font-black">
                           {account.username.charAt(0).toUpperCase()}
                         </div>
                       </div>
@@ -160,8 +160,8 @@ const AccountsManager = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
-                      account.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                      account.role === 'ADMIN' ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'bg-slate-100 text-slate-600'
                     }`}>
                       {account.role}
                     </span>

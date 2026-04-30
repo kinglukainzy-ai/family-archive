@@ -26,7 +26,7 @@ const Avatar = ({ name, src, size = 'md', className = '' }) => {
     >
       {src ? (
         <img 
-          src={src.startsWith('http') ? src : `${import.meta.env.VITE_API_URL || ''}${src}`} 
+          src={src.startsWith('http') ? src : `${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace(/\/api\/?$/, '')}${src}`} 
           alt={name} 
           className="w-full h-full object-cover"
           onError={(e) => {

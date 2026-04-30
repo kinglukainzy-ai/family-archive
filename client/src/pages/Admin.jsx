@@ -11,8 +11,11 @@ import {
   GitBranch, 
   CheckSquare, 
   Shield, 
-  LayoutDashboard 
+  LayoutDashboard,
+  Users
 } from 'lucide-react';
+import ManageMembers from '../components/admin/ManageMembers';
+import ManageRelations from '../components/admin/ManageRelations';
 
 const Admin = () => {
   const { user } = useAuth();
@@ -38,6 +41,8 @@ const Admin = () => {
     { id: 'enroll', label: 'Enroll Member', icon: UserPlus },
     { id: 'relationships', label: 'Relationships', icon: GitBranch },
     { id: 'media', label: 'Media Approval', icon: CheckSquare },
+    { id: 'manage', label: 'Manage Members', icon: Users },
+    { id: 'relations', label: 'Manage Relations', icon: GitBranch },
     { id: 'accounts', label: 'Accounts', icon: Shield },
   ];
 
@@ -59,8 +64,8 @@ const Admin = () => {
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all
                       ${activeTab === tab.id
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100'
-                        : 'text-gray-600 hover:bg-white hover:text-indigo-600'
+                        ? 'bg-primary-600 text-white shadow-lg shadow-primary-100'
+                        : 'text-slate-600 hover:bg-white hover:text-primary-600'
                       }
                     `}
                   >
@@ -74,10 +79,12 @@ const Admin = () => {
 
           {/* Main Content */}
           <main className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            {activeTab === 'dashboard' && <AdminDashboard />}
+            {activeTab === 'dashboard' && <AdminDashboard setActiveTab={setActiveTab} />}
             {activeTab === 'enroll' && <EnrollMember onSuccess={() => setActiveTab('relationships')} />}
             {activeTab === 'relationships' && <LinkRelationships />}
             {activeTab === 'media' && <MediaApproval />}
+            {activeTab === 'manage' && <ManageMembers />}
+            {activeTab === 'relations' && <ManageRelations />}
             {activeTab === 'accounts' && <AccountsManager />}
           </main>
         </div>

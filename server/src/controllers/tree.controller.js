@@ -11,7 +11,7 @@ const getTree = asyncHandler(async (req, res) => {
   });
 
   if (!rootPerson) {
-    return res.status(404).json({ message: 'Root person not set' });
+    return res.json({ root: null, message: 'Root person not set. Please designate a root person in the admin panel.' });
   }
 
   const tree = await buildTree(rootPerson.id);
@@ -27,7 +27,7 @@ const getRoot = asyncHandler(async (req, res) => {
   });
 
   if (!rootPerson) {
-    return res.status(404).json({ message: 'Root person not set' });
+    return res.json(null);
   }
 
   res.json(rootPerson);

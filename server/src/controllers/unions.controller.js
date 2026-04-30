@@ -24,7 +24,7 @@ const createUnion = asyncHandler(async (req, res) => {
   const union = await prisma.union.create({
     data: {
       partner1Id,
-      partner2Id,
+      partner2Id: partner2Id || null,
       unionType,
       startDate: startDate ? new Date(startDate) : null,
       endDate: endDate ? new Date(endDate) : null,
@@ -70,10 +70,36 @@ const updateUnion = asyncHandler(async (req, res) => {
 // @route   DELETE /api/unions/:id
 // @access  Admin
 const deleteUnion = asyncHandler(async (req, res) => {
-  await prisma.union.delete({
-    where: { id: req.params.id }
+  const { id } = req.params;
+
+  await prisma.$transaction([
+    // First, remove all child-union links for this union
+    prisma.child.deleteMany({
+      where: { unionId: id }
+    }),
+    // Then delete the union itself
+    prisma.union.delete({
+      where: { id }
+    })
+  ]);
+
+  res.json({ message: 'Union and associated links removed successfully' });
+});
+
+// @desc    Remove child from union
+// @route   DELETE /api/unions/:unionId/children/:personId
+// @access  Admin
+const removeChildFromUnion = asyncHandler(async (req, res) => {
+  const { unionId, personId } = req.params;
+  await prisma.child.delete({
+    where: {
+      unionId_personId: {
+        unionId,
+        personId
+      }
+    }
   });
-  res.json({ message: 'Union removed' });
+  res.json({ message: 'Child link removed' });
 });
 
 module.exports = {
@@ -81,5 +107,6 @@ module.exports = {
   createUnion,
   addChildToUnion,
   updateUnion,
-  deleteUnion
+  deleteUnion,
+  removeChildFromUnion
 };

@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const { personId } = req.params;
+    const personId = req.params.personId || req.params.id;
     let folder = 'photos';
     
     if (file.mimetype.startsWith('video/')) folder = 'videos';

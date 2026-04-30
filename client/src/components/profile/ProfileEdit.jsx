@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import api from '../../api/axios';
 import RichTextEditor from '../shared/RichTextEditor';
-import { Save } from 'lucide-react';
+import { Save, Camera } from 'lucide-react';
 
 const ProfileEdit = ({ person, onCancel, onSave }) => {
   const [formData, setFormData] = useState({
@@ -21,12 +21,22 @@ const ProfileEdit = ({ person, onCancel, onSave }) => {
   });
 
   const [saving, setSaving] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setSaving(true);
     try {
       await api.patch(`/persons/${person.id}`, formData);
+
+      if (profilePhoto) {
+        const photoData = new FormData();
+        photoData.append('file', profilePhoto);
+        await api.patch(`/persons/${person.id}/photo`, photoData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+      }
+
       onSave();
     } catch (error) {
       console.error('Failed to update person:', error);
@@ -59,9 +69,33 @@ const ProfileEdit = ({ person, onCancel, onSave }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="p-8 space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Basic Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="space-y-6">
+            <h3 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em]">Profile Presentation</h3>
+            
+            <div className="flex items-center gap-6 p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl group hover:border-primary-400 transition-all cursor-pointer relative overflow-hidden">
+              <div className="w-20 h-20 rounded-2xl bg-white border-2 border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-primary-600 transition-colors shadow-sm overflow-hidden flex-shrink-0">
+                {profilePhoto ? (
+                  <img src={URL.createObjectURL(profilePhoto)} alt="Preview" className="w-full h-full object-cover" />
+                ) : person.profilePhotoUrl ? (
+                  <img src={`${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace(/\/api$/, '')}${person.profilePhotoUrl}`} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <Camera className="w-8 h-8" />
+                )}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-black text-slate-700">{profilePhoto ? 'New photo selected' : 'Change Profile Photo'}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">JPG, PNG or WEBP (Max 5MB)</p>
+              </div>
+              <input 
+                type="file" 
+                accept="image/*"
+                onChange={(e) => setProfilePhoto(e.target.files[0])}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+            </div>
+
+            <h3 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] pt-4">Basic Information</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">First Name</label>

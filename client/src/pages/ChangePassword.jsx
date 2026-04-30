@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import { Lock, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react';
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -40,38 +40,46 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 mb-4">
-            <Lock size={32} />
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+      <div className="max-w-md w-full space-y-10 p-10 bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/60 border border-slate-200 relative overflow-hidden">
+        <button 
+          onClick={() => navigate(-1)}
+          className="absolute top-6 left-6 p-2 text-slate-400 hover:text-primary-600 transition-colors"
+          title="Go Back"
+        >
+          <ArrowLeft size={24} />
+        </button>
+
+        <div className="text-center pt-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary-50 text-primary-600 mb-6 shadow-sm">
+            <Lock size={40} strokeWidth={2.5} />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">
             Change Password
           </h2>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            For security, please change your temporary password
+          <p className="mt-2 text-slate-500 font-medium">
+            For security, please update your temporary credentials.
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-8" onSubmit={handleSubmit}>
           {error && (
-            <div className="flex items-center gap-2 p-4 text-sm text-red-800 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg">
-              <AlertCircle size={18} />
+            <div className="flex items-center gap-3 p-5 text-sm font-bold text-red-700 bg-red-50 border-2 border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-2">
+              <AlertCircle size={20} />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="flex items-center gap-2 p-4 text-sm text-green-800 bg-green-50 dark:bg-green-900/20 dark:text-green-400 rounded-lg">
-              <CheckCircle size={18} />
+            <div className="flex items-center gap-3 p-5 text-sm font-bold text-green-700 bg-green-50 border-2 border-green-100 rounded-2xl animate-in fade-in slide-in-from-top-2">
+              <CheckCircle size={20} />
               <span>{success}</span>
             </div>
           )}
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-2 px-1">
                 Current Password
               </label>
               <input
@@ -79,12 +87,13 @@ const ChangePassword = () => {
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="block w-full px-3 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="block w-full px-4 py-4 border-2 border-slate-100 rounded-2xl bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all font-medium"
+                placeholder="••••••••"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-2 px-1">
                 New Password
               </label>
               <input
@@ -92,12 +101,13 @@ const ChangePassword = () => {
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="block w-full px-3 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="block w-full px-4 py-4 border-2 border-slate-100 rounded-2xl bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all font-medium"
+                placeholder="Min. 8 characters"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-2 px-1">
                 Confirm New Password
               </label>
               <input
@@ -105,7 +115,8 @@ const ChangePassword = () => {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="block w-full px-3 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="block w-full px-4 py-4 border-2 border-slate-100 rounded-2xl bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all font-medium"
+                placeholder="••••••••"
               />
             </div>
           </div>
@@ -113,7 +124,7 @@ const ChangePassword = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 rounded-lg text-white bg-primary-600 hover:bg-primary-700 font-semibold transition-all disabled:opacity-50"
+            className="w-full py-5 px-6 rounded-2xl text-white bg-primary-600 hover:bg-primary-700 font-black text-lg shadow-xl shadow-primary-200 transition-all transform active:scale-[0.98] disabled:opacity-50"
           >
             {isLoading ? 'Updating...' : 'Update Password'}
           </button>

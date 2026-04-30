@@ -82,19 +82,19 @@ const LinkRelationships = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex gap-4 border-b border-gray-100">
+      <div className="flex gap-8 border-b border-slate-100 mb-10">
         <button
           onClick={() => setActiveTab('create-union')}
-          className={`pb-4 px-2 text-sm font-bold transition-colors ${
-            activeTab === 'create-union' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500'
+          className={`pb-5 px-1 text-sm font-black uppercase tracking-widest transition-all ${
+            activeTab === 'create-union' ? 'border-b-4 border-primary-600 text-primary-600' : 'text-slate-400 hover:text-slate-600'
           }`}
         >
           Manage Unions
         </button>
         <button
           onClick={() => setActiveTab('add-children')}
-          className={`pb-4 px-2 text-sm font-bold transition-colors ${
-            activeTab === 'add-children' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500'
+          className={`pb-5 px-1 text-sm font-black uppercase tracking-widest transition-all ${
+            activeTab === 'add-children' ? 'border-b-4 border-primary-600 text-primary-600' : 'text-slate-400 hover:text-slate-600'
           }`}
         >
           Link Children
@@ -113,13 +113,13 @@ const LinkRelationships = () => {
               <p className="text-sm text-gray-500">Establish a relationship between two persons.</p>
             </div>
 
-            <form onSubmit={handleCreateUnion} className="space-y-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <form onSubmit={handleCreateUnion} className="space-y-6 bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Partner 1</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Partner 1</label>
                 <select
                   value={unionForm.partner1Id}
                   onChange={(e) => setUnionForm({ ...unionForm, partner1Id: e.target.value })}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full px-4 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-200 shadow-sm appearance-none"
                   required
                 >
                   <option value="">Select partner 1...</option>
@@ -130,11 +130,11 @@ const LinkRelationships = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Partner 2 (Optional)</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Partner 2 (Optional)</label>
                 <select
                   value={unionForm.partner2Id}
                   onChange={(e) => setUnionForm({ ...unionForm, partner2Id: e.target.value })}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full px-4 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-200 shadow-sm appearance-none"
                 >
                   <option value="">Single Parent / Unknown Partner</option>
                   {persons.map(p => (
@@ -146,11 +146,11 @@ const LinkRelationships = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Union Type</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Union Type</label>
                 <select
                   value={unionForm.unionType}
                   onChange={(e) => setUnionForm({ ...unionForm, unionType: e.target.value })}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full px-4 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-200 shadow-sm appearance-none"
                 >
                   <option value="MARRIED">Married</option>
                   <option value="DIVORCED">Divorced</option>
@@ -162,7 +162,7 @@ const LinkRelationships = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
+                className="w-full py-4 bg-primary-600 text-white font-bold rounded-2xl shadow-xl shadow-primary-200 hover:bg-primary-700 transform active:scale-[0.99] transition-all duration-300"
               >
                 Create Union
               </button>
@@ -218,13 +218,13 @@ const LinkRelationships = () => {
               <p className="text-sm text-gray-500">Assign a person as a child of an existing union.</p>
             </div>
 
-            <form onSubmit={handleAddChild} className="space-y-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <form onSubmit={handleAddChild} className="space-y-6 bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Select Union</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Select Union</label>
                 <select
                   value={childForm.unionId}
                   onChange={(e) => setChildForm({ ...childForm, unionId: e.target.value })}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full px-4 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-200 shadow-sm appearance-none"
                   required
                 >
                   <option value="">Select a union...</option>
@@ -237,11 +237,11 @@ const LinkRelationships = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Select Child</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Select Child</label>
                 <select
                   value={childForm.personId}
                   onChange={(e) => setChildForm({ ...childForm, personId: e.target.value })}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full px-4 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-200 shadow-sm appearance-none"
                   required
                 >
                   <option value="">Select person...</option>
@@ -252,11 +252,11 @@ const LinkRelationships = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Relationship Type</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Relationship Type</label>
                 <select
                   value={childForm.relationshipType}
                   onChange={(e) => setChildForm({ ...childForm, relationshipType: e.target.value })}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full px-4 py-4 bg-white border-2 border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all duration-200 shadow-sm appearance-none"
                 >
                   <option value="BIOLOGICAL">Biological</option>
                   <option value="ADOPTED">Adopted</option>
@@ -266,7 +266,7 @@ const LinkRelationships = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
+                className="w-full py-4 bg-primary-600 text-white font-bold rounded-2xl shadow-xl shadow-primary-200 hover:bg-primary-700 transform active:scale-[0.99] transition-all duration-300"
               >
                 Link Child
               </button>
@@ -274,23 +274,23 @@ const LinkRelationships = () => {
           </div>
 
           {/* Help/Guide */}
-          <div className="bg-indigo-50 p-8 rounded-2xl border border-indigo-100 self-start">
-            <h4 className="font-bold text-indigo-900 flex items-center gap-2 mb-4">
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 self-start">
+            <h4 className="font-black text-primary-600 uppercase tracking-widest flex items-center gap-3 mb-6 text-sm">
               <AlertCircle className="w-5 h-5" />
               Relationship Guide
             </h4>
-            <ul className="space-y-4 text-sm text-indigo-800">
-              <li className="flex gap-2">
-                <span className="font-bold">1.</span>
-                Children belong to <span className="font-bold">unions</span>, not individuals. This ensures the tree knows exactly who both parents are.
+            <ul className="space-y-6 text-sm text-slate-600 font-medium">
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center font-black text-xs">1</span>
+                <span>Children belong to <span className="font-black text-slate-900">unions</span>, not individuals. This ensures the tree knows exactly who both parents are.</span>
               </li>
-              <li className="flex gap-2">
-                <span className="font-bold">2.</span>
-                For single parents, create a union with only one partner selected.
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center font-black text-xs">2</span>
+                <span>For single parents, create a union with only one partner selected.</span>
               </li>
-              <li className="flex gap-2">
-                <span className="font-bold">3.</span>
-                If a person has multiple marriages, create multiple unions and assign children to the correct one.
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center font-black text-xs">3</span>
+                <span>If a person has multiple marriages, create multiple unions and assign children to the correct one.</span>
               </li>
             </ul>
           </div>

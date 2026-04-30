@@ -39,7 +39,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/tree" className="flex-shrink-0 flex items-center gap-2 text-indigo-600 font-bold text-xl">
+            <Link to="/tree" className="flex-shrink-0 flex items-center gap-2 text-primary-600 font-bold text-xl">
               <TreePine className="w-8 h-8" />
               <span className="hidden sm:block">Family Archive</span>
             </Link>
@@ -48,7 +48,7 @@ const Navbar = () => {
               <Link
                 to="/tree"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  pathname === '/tree' ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  pathname === '/tree' ? 'border-primary-500 text-slate-900' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
                 }`}
               >
                 Family Tree
@@ -56,7 +56,7 @@ const Navbar = () => {
               <Link
                 to="/search"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  pathname === '/search' ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  pathname === '/search' ? 'border-primary-500 text-slate-900' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
                 }`}
               >
                 Search
@@ -65,7 +65,7 @@ const Navbar = () => {
                 <Link
                   to="/admin"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                    pathname.startsWith('/admin') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    pathname.startsWith('/admin') ? 'border-primary-500 text-slate-900' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700'
                   }`}
                 >
                   Admin
@@ -163,7 +163,7 @@ const Navbar = () => {
             <Link
               to="/tree"
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-                pathname === '/tree' ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                pathname === '/tree' ? 'border-primary-500 text-primary-700 bg-primary-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -172,7 +172,7 @@ const Navbar = () => {
             <Link
               to="/search"
               className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-                pathname === '/search' ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                pathname === '/search' ? 'border-primary-500 text-primary-700 bg-primary-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -182,7 +182,7 @@ const Navbar = () => {
               <Link
                 to="/admin"
                 className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-                  pathname.startsWith('/admin') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                  pathname.startsWith('/admin') ? 'border-primary-500 text-primary-700 bg-primary-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
