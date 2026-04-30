@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState } from 'react';
 import PersonCard from './PersonCard';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
