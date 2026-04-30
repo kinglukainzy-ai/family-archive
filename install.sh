@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# Family Archive — Oracle Always Free ARM Installation Script
+# Tetekai-Amla Weku — Oracle Always Free ARM Installation Script
 # Ubuntu 22.04 | Node 20 | PostgreSQL 15 | Nginx | PM2
 #
 # Oracle-specific notes baked in:
@@ -33,7 +33,7 @@ fi
 
 echo ""
 echo "╔══════════════════════════════════════════════════╗"
-echo "║     Family Archive — Oracle ARM Server Setup     ║"
+echo "║     Tetekai-Amla Weku — Oracle ARM Server Setup     ║"
 echo "╚══════════════════════════════════════════════════╝"
 echo ""
 
@@ -41,16 +41,16 @@ echo ""
 info "Collecting configuration..."
 echo ""
 read -p "  Domain name or server IP: " DOMAIN
-read -p "  App directory [/var/www/family-archive]: " APP_DIR
-APP_DIR=${APP_DIR:-/var/www/family-archive}
-read -p "  PostgreSQL database name [family_archive]: " DB_NAME
-DB_NAME=${DB_NAME:-family_archive}
-read -p "  PostgreSQL username [familyuser]: " DB_USER
-DB_USER=${DB_USER:-familyuser}
+read -p "  App directory [/var/www/tetekai-amla-weku]: " APP_DIR
+APP_DIR=${APP_DIR:-/var/www/tetekai-amla-weku}
+read -p "  PostgreSQL database name [tetekai_amla_weku]: " DB_NAME
+DB_NAME=${DB_NAME:-tetekai_amla_weku}
+read -p "  PostgreSQL username [tetekaiuser]: " DB_USER
+DB_USER=${DB_USER:-tetekaiuser}
 read -s -p "  PostgreSQL password: " DB_PASS
 echo ""
-read -p "  Git repo URL [https://github.com/kinglukainzy-ai/family-archive]: " REPO_URL
-REPO_URL=${REPO_URL:-https://github.com/kinglukainzy-ai/family-archive}
+read -p "  Git repo URL [https://github.com/kinglukainzy-ai/tetekai-amla-weku]: " REPO_URL
+REPO_URL=${REPO_URL:-https://github.com/kinglukainzy-ai/tetekai-amla-weku}
 JWT_SECRET=$(openssl rand -hex 64)
 echo ""
 log "Configuration collected."
@@ -132,7 +132,7 @@ log "Database '${DB_NAME}' and user '${DB_USER}' ready."
 
 # ── Step 9: Storage directory ───────────────────────────────
 info "Setting up storage directory..."
-STORAGE_DIR=/mnt/family-archive-storage
+STORAGE_DIR=/mnt/tetekai-amla-weku-storage
 mkdir -p "${STORAGE_DIR}/photos" "${STORAGE_DIR}/documents" "${STORAGE_DIR}/videos"
 chown -R www-data:www-data "${STORAGE_DIR}"
 chmod -R 755 "${STORAGE_DIR}"
@@ -207,11 +207,11 @@ log "File ownership set."
 
 # ── Step 17: PM2 ───────────────────────────────────────────
 info "Configuring PM2..."
-mkdir -p /var/log/family-archive
+mkdir -p /var/log/tetekai-amla-weku
 cat > "${APP_DIR}/ecosystem.config.js" <<ECOF
 module.exports = {
   apps: [{
-    name: 'family-archive',
+    name: 'tetekai-amla-weku',
     script: '${APP_DIR}/server/src/server.js',
     cwd: '${APP_DIR}/server',
     instances: 1,
@@ -219,8 +219,8 @@ module.exports = {
     watch: false,
     max_memory_restart: '1G',
     env: { NODE_ENV: 'production', PORT: 3001 },
-    error_file: '/var/log/family-archive/error.log',
-    out_file:   '/var/log/family-archive/out.log',
+    error_file: '/var/log/tetekai-amla-weku/error.log',
+    out_file:   '/var/log/tetekai-amla-weku/out.log',
     log_date_format: 'YYYY-MM-DD HH:mm:ss'
   }]
 };
@@ -232,7 +232,7 @@ log "PM2 started and configured for reboot survival."
 
 # ── Step 18: Nginx ──────────────────────────────────────────
 info "Configuring Nginx..."
-cat > /etc/nginx/sites-available/family-archive <<NGXEOF
+cat > /etc/nginx/sites-available/tetekai-amla-weku <<NGXEOF
 server {
     listen 80;
     server_name ${DOMAIN};
@@ -266,7 +266,7 @@ server {
     }
 }
 NGXEOF
-ln -sf /etc/nginx/sites-available/family-archive /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/tetekai-amla-weku /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
 systemctl enable nginx
@@ -298,12 +298,12 @@ fi
 
 # ── Step 21: Daily DB backup ────────────────────────────────
 info "Setting up daily database backups..."
-mkdir -p /var/backups/family-archive
-cat > /etc/cron.d/family-archive-backup <<CRONEOF
-0 2 * * * postgres pg_dump ${DB_NAME} | gzip > /var/backups/family-archive/backup-\$(date +\%Y\%m\%d).sql.gz 2>/dev/null
-5 2 * * * root find /var/backups/family-archive -name "*.sql.gz" -mtime +30 -delete
+mkdir -p /var/backups/tetekai-amla-weku
+cat > /etc/cron.d/tetekai-amla-weku-backup <<CRONEOF
+0 2 * * * postgres pg_dump ${DB_NAME} | gzip > /var/backups/tetekai-amla-weku/backup-\$(date +\%Y\%m\%d).sql.gz 2>/dev/null
+5 2 * * * root find /var/backups/tetekai-amla-weku -name "*.sql.gz" -mtime +30 -delete
 CRONEOF
-log "Daily backups scheduled at 02:00 → /var/backups/family-archive/"
+log "Daily backups scheduled at 02:00 → /var/backups/tetekai-amla-weku/"
 
 # ── Step 22: Idle-prevention cron ──────────────────────────
 # Oracle reclaims instances idle for ~7 days with no compute.
@@ -314,7 +314,7 @@ log "Idle-prevention cron active."
 
 # ── Step 23: Update script ──────────────────────────────────
 info "Creating update command..."
-cat > /usr/local/bin/family-archive-update <<UPDATEEOF
+cat > /usr/local/bin/tetekai-amla-weku-update <<UPDATEEOF
 #!/bin/bash
 set -e
 APP_DIR=${APP_DIR}
@@ -327,11 +327,11 @@ npx prisma migrate deploy && npx prisma generate
 echo "Building client..."
 cd "\${APP_DIR}/client" && npm install -q && npm run build
 echo "Restarting..."
-pm2 restart family-archive
+pm2 restart tetekai-amla-weku
 echo "Done."
 UPDATEEOF
-chmod +x /usr/local/bin/family-archive-update
-log "Update script at /usr/local/bin/family-archive-update"
+chmod +x /usr/local/bin/tetekai-amla-weku-update
+log "Update script at /usr/local/bin/tetekai-amla-weku-update"
 
 # ── Summary ─────────────────────────────────────────────────
 echo ""
@@ -343,14 +343,14 @@ echo -e "  ${GREEN}App URL:${NC}        https://${DOMAIN}"
 echo -e "  ${GREEN}Admin login:${NC}    admin / ChangeMe123!"
 echo -e "  ${GREEN}App dir:${NC}        ${APP_DIR}"
 echo -e "  ${GREEN}Storage:${NC}        ${STORAGE_DIR}"
-echo -e "  ${GREEN}Logs:${NC}           /var/log/family-archive/"
-echo -e "  ${GREEN}Backups:${NC}        /var/backups/family-archive/"
+echo -e "  ${GREEN}Logs:${NC}           /var/log/tetekai-amla-weku/"
+echo -e "  ${GREEN}Backups:${NC}        /var/backups/tetekai-amla-weku/"
 echo ""
 echo -e "  ${YELLOW}Commands:${NC}"
 echo "    pm2 status                    — server status"
-echo "    pm2 logs family-archive       — live logs"
-echo "    pm2 restart family-archive    — restart"
-echo "    family-archive-update         — deploy updates"
+echo "    pm2 logs tetekai-amla-weku       — live logs"
+echo "    pm2 restart tetekai-amla-weku    — restart"
+echo "    tetekai-amla-weku-update         — deploy updates"
 echo "    sudo certbot renew            — renew SSL"
 echo ""
 echo -e "  ${RED}Required in OCI Console (Networking → VCN → Security Lists):${NC}"

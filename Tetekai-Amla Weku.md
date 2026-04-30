@@ -1,4 +1,4 @@
-# Family Archive — Complete Project Specification
+# Tetekai-Amla Weku — Complete Project Specification
 
 > Version 1.0 | For IDE Agent Execution
 
@@ -32,7 +32,7 @@ The application is to be hosted on an Oracle Always Free ARM server (4 cores, 24
 ## 3. PROJECT STRUCTURE
 
 ```text
-family-archive/
+tetekai-amla-weku/
 ├── client/                        # React frontend (Vite)
 │   ├── public/
 │   ├── src/
@@ -701,7 +701,7 @@ Add `storage/` to `.gitignore`. Never commit uploaded files.
 ```env
 # server/.env
 
-DATABASE_URL=postgresql://user:password@localhost:5432/family_archive
+DATABASE_URL=postgresql://user:password@localhost:5432/tetekai_amla_weku
 JWT_SECRET=your_very_long_random_secret_here
 JWT_EXPIRES_IN=7d
 PORT=3001
@@ -826,7 +826,7 @@ Create one admin account on first seed:
 ## 15. DEPLOYMENT NOTES (Oracle Always Free)
 
 - Oracle ARM VM: Ubuntu 22.04
-- Use PM2 to run the Node server as a process: `pm2 start server.js --name family-archive`
+- Use PM2 to run the Node server as a process: `pm2 start server.js --name tetekai-amla-weku`
 - Use Nginx as reverse proxy: port 80/443 → port 3001
 - Use Certbot for SSL (Let's Encrypt)
 - Serve the built React client as static files via Nginx from `client/dist/`

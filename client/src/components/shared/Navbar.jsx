@@ -41,7 +41,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/tree" className="flex-shrink-0 flex items-center gap-2 text-primary-600 font-bold text-xl">
               <TreePine className="w-8 h-8" />
-              <span className="hidden sm:block">Family Archive</span>
+              <span className="hidden sm:block">Tetekai-Amla Weku</span>
             </Link>
             
             <div className="hidden sm:ml-8 sm:flex sm:space-x-8">

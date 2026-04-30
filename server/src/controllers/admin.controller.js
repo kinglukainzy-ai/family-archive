@@ -53,7 +53,7 @@ const createAccount = asyncHandler(async (req, res) => {
   await createNotification(
     account.id,
     'NEW_ACCOUNT_CREATED',
-    'Welcome to the family archive. Your account is ready. Please change your password on first login.',
+    'Welcome to Tetekai-Amla Weku. Your account is ready. Please change your password on first login.',
     personId || null
   );
 
@@ -68,7 +68,7 @@ const createAccount = asyncHandler(async (req, res) => {
         await createNotification(
           acc.id,
           'NEW_MEMBER_ENROLLED',
-          `${person.firstName} ${person.lastName} has joined the family archive.`,
+          `${person.firstName} ${person.lastName} has joined Tetekai-Amla Weku.`,
           personId
         );
       }

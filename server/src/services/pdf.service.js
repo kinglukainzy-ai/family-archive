@@ -28,7 +28,7 @@ const generateFamilyPDF = async () => {
     </head>
     <body>
       <div class="header">
-        <h1>Family Archive Report</h1>
+        <h1>Tetekai-Amla Weku Report</h1>
         <p>Generated on ${new Date().toLocaleDateString()}</p>
         <p>Total Members: ${persons.length}</p>
       </div>

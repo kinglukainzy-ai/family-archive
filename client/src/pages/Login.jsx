@@ -44,7 +44,7 @@ const Login = () => {
             <Lock size={36} />
           </div>
           <h2 className="text-4xl font-extrabold tracking-tight text-slate-900">
-            Family Archive
+            Tetekai-Amla Weku
           </h2>
           <p className="mt-3 text-slate-500 font-medium">
             Access your heritage and legacy
