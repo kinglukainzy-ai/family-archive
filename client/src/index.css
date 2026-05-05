@@ -2,6 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Fix for 'vertical-align' ignored with 'display: block' on images/media */
+  img, svg, video, canvas, audio, iframe, embed, object {
+    vertical-align: unset;
+  }
+
+  /* Fix for missing standard 'appearance' property */
+  button, 
+  input[type='button'], 
+  input[type='reset'], 
+  input[type='submit'] {
+    appearance: button;
+  }
+
+  [type='search'] {
+    appearance: textfield;
+    outline-offset: -2px;
+  }
+
+  ::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  ::-webkit-file-upload-button {
+    appearance: button;
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  /* Fix for missing standard 'line-clamp' property */
+  .line-clamp-1 { line-clamp: 1; }
+  .line-clamp-2 { line-clamp: 2; }
+  .line-clamp-3 { line-clamp: 3; }
+  .line-clamp-4 { line-clamp: 4; }
+  .line-clamp-5 { line-clamp: 5; }
+  .line-clamp-6 { line-clamp: 6; }
+  .line-clamp-none { line-clamp: none; }
+}
+
+/* Quill overrides to fix float + inline-block redundancy */
+.ql-snow.ql-toolbar button, 
+.ql-snow .ql-toolbar button {
+  display: block;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
