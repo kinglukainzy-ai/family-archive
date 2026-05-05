@@ -72,6 +72,10 @@ echo ""
 # ── Step 1: Sync latest code (hard reset — server always matches remote) ─
 info "Pulling latest code..."
 cd "$APP_DIR" || fail "Cannot cd to $APP_DIR"
+
+# Allow root to access the repo even if owned by www-data
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
+
 git fetch origin main
 
 LOCAL=$(git rev-parse HEAD)
