@@ -30,10 +30,10 @@ const AdminDashboard = ({ setActiveTab }) => {
   if (loading) return <div className="animate-pulse">Loading dashboard...</div>;
 
   const cards = [
-    { label: 'Total Members', value: stats?.totalPersons || 0, icon: Users, gradient: 'from-primary-600 to-indigo-600', shadow: 'shadow-primary-200' },
-    { label: 'Pending Media', value: stats?.pendingMedia || 0, icon: ImageIcon, gradient: 'from-primary-500 to-primary-700', shadow: 'shadow-primary-200' },
-    { label: 'Locked Profiles', value: stats?.lockedProfiles || 0, icon: Lock, gradient: 'from-primary-400 to-primary-600', shadow: 'shadow-primary-200' },
-    { label: 'Total Accounts', value: stats?.totalAccounts || 0, icon: AlertCircle, gradient: 'from-indigo-500 to-primary-600', shadow: 'shadow-indigo-200' },
+    { label: 'Total Members',   value: stats?.personsCount       || 0, icon: Users,       gradient: 'from-primary-600 to-indigo-600', shadow: 'shadow-primary-200' },
+    { label: 'Pending Media',   value: stats?.pendingMediaCount  || 0, icon: ImageIcon,   gradient: 'from-primary-500 to-primary-700', shadow: 'shadow-primary-200' },
+    { label: 'Locked Profiles', value: stats?.lockedProfilesCount|| 0, icon: Lock,        gradient: 'from-primary-400 to-primary-600', shadow: 'shadow-primary-200' },
+    { label: 'Total Accounts',  value: stats?.accountsCount      || 0, icon: AlertCircle, gradient: 'from-indigo-500 to-primary-600',  shadow: 'shadow-indigo-200'  },
   ];
 
   return (
