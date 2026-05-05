@@ -346,25 +346,11 @@ info "Setting up idle-prevention cron..."
 log "Idle-prevention cron active."
 
 # ── Step 23: Update script ──────────────────────────────────
-info "Creating update command..."
-cat > /usr/local/bin/tetekai-amla-weku-update << UPDATEEOF
-#!/bin/bash
-set -e
-APP_DIR=${APP_DIR}
-echo "Pulling latest code..."
-cd "\${APP_DIR}" && git pull origin main
-echo "Server dependencies..."
-cd "\${APP_DIR}/server" && npm install --omit=dev
-echo "Migrations..."
-npx prisma migrate deploy && npx prisma generate
-echo "Building client..."
-cd "\${APP_DIR}/client" && npm install && npm run build
-echo "Restarting..."
-pm2 restart tetekai-amla-weku
-echo "Done."
-UPDATEEOF
+info "Installing update command..."
+cp "${APP_DIR}/update.sh" /usr/local/bin/tetekai-amla-weku-update
 chmod +x /usr/local/bin/tetekai-amla-weku-update
 log "Update script installed at /usr/local/bin/tetekai-amla-weku-update"
+log "To update: sudo tetekai-amla-weku-update  (or: sudo bash ${APP_DIR}/update.sh)"
 
 # ── Summary ─────────────────────────────────────────────────
 echo ""
