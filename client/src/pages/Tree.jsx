@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import FamilyTree from '../components/tree/FamilyTree';
 import Navbar from '../components/shared/Navbar';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 
 const Tree = () => {
   const [treeData, setTreeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     const fetchTree = async () => {
@@ -24,6 +25,10 @@ const Tree = () => {
     fetchTree();
   }, []);
 
+  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.1, 2));
+  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.2));
+  const handleResetZoom = () => setZoom(1);
+
   if (loading) return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -38,7 +43,38 @@ const Tree = () => {
     <div className="min-h-screen bg-gray-50 overflow-hidden flex flex-col">
       <Navbar />
       
-      <main className="flex-1 relative overflow-auto p-8">
+      {/* Zoom Controls */}
+      {!error && treeData && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 p-2 bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl shadow-2xl shadow-slate-200/50">
+          <button 
+            onClick={handleZoomOut}
+            className="p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+            title="Zoom Out"
+          >
+            <ZoomOut className="w-5 h-5" />
+          </button>
+          <div className="w-16 text-center text-xs font-bold text-slate-500 tabular-nums">
+            {Math.round(zoom * 100)}%
+          </div>
+          <button 
+            onClick={handleZoomIn}
+            className="p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+            title="Zoom In"
+          >
+            <ZoomIn className="w-5 h-5" />
+          </button>
+          <div className="w-px h-6 bg-slate-200 mx-1" />
+          <button 
+            onClick={handleResetZoom}
+            className="p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+            title="Reset Zoom"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      <main className="flex-1 relative overflow-auto p-8 scrollbar-hide">
         {error ? (
           <div className="max-w-md mx-auto mt-20 text-center p-8 bg-white rounded-2xl shadow-xl shadow-indigo-100 border border-indigo-50">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
@@ -52,7 +88,13 @@ const Tree = () => {
             </button>
           </div>
         ) : (
-          <div className="flex justify-center min-w-max pb-20">
+          <div 
+            className="flex justify-center min-w-max pb-40 transition-transform duration-200 ease-out"
+            style={{ 
+              transform: `scale(${zoom})`,
+              transformOrigin: 'top center'
+            }}
+          >
             {treeData && <FamilyTree person={treeData} />}
           </div>
         )}
