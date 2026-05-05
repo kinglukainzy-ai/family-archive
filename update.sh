@@ -69,7 +69,7 @@ DOMAIN="${DOMAIN%/}"
 info "Domain: $DOMAIN"
 echo ""
 
-# ── Step 1: Pull latest code ─────────────────────────────────
+# ── Step 1: Sync latest code (hard reset — server always matches remote) ─
 info "Pulling latest code..."
 cd "$APP_DIR" || fail "Cannot cd to $APP_DIR"
 git fetch origin main
@@ -78,10 +78,12 @@ LOCAL=$(git rev-parse HEAD)
 REMOTE=$(git rev-parse origin/main)
 
 if [ "$LOCAL" = "$REMOTE" ]; then
-  warn "Git is already up to date — continuing to sync dependencies and rebuild."
+  warn "Already up to date — continuing to sync dependencies and rebuild."
 else
-  git pull origin main || fail "git pull failed"
-  log "Code updated."
+  # Hard reset discards any local server edits so the pull is never blocked.
+  # Config/secrets live in .env (not tracked), so no data is lost.
+  git reset --hard origin/main || fail "git reset failed"
+  log "Code updated to $(git rev-parse --short HEAD)."
 fi
 
 # ── Step 2: Server dependencies ──────────────────────────────
