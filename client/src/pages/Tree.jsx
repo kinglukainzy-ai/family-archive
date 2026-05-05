@@ -32,13 +32,25 @@ const Tree = () => {
   
   const centerTree = () => {
     if (containerRef.current) {
-      containerRef.current.scrollTo({
-        left: (containerRef.current.scrollWidth - containerRef.current.clientWidth) / 2,
-        top: 0,
-        behavior: 'smooth'
-      });
+      const scrollLeft = (containerRef.current.scrollWidth - containerRef.current.clientWidth) / 2;
+      containerRef.current.scrollLeft = scrollLeft;
     }
   };
+
+  // Auto-center when tree data is loaded or zoom changes
+  useEffect(() => {
+    if (treeData) {
+      // Small timeout to ensure DOM has rendered the tree branches
+      const timer = setTimeout(centerTree, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [treeData, zoom]);
+
+  // Handle window resize
+  useEffect(() => {
+    window.addEventListener('resize', centerTree);
+    return () => window.removeEventListener('resize', centerTree);
+  }, []);
 
   if (loading) return (
     <div className="min-h-screen bg-white">
